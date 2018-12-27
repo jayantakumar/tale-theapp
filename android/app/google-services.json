@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "21377451261",
+    "firebase_url": "https://tale-diary-app.firebaseio.com",
+    "project_id": "tale-diary-app",
+    "storage_bucket": "tale-diary-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21377451261:android:6a11688dbe6e3b4f",
+        "android_client_info": {
+          "package_name": "com.example.tale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "21377451261-sil41errnvhljbpgtqtc80j62hcglerp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tale",
+            "certificate_hash": "2d0c48f2d1452968d7d00e7486ba9e947732c8d1"
+          }
+        },
+        {
+          "client_id": "21377451261-iec1vq4aj161aqdva3khb5i045trbamd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzUrdrYL2PzYt3Nt5_FW2P9URBQCayXW4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "21377451261-iec1vq4aj161aqdva3khb5i045trbamd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
