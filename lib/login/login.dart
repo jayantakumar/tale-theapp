@@ -6,17 +6,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'animatedwave.dart';
 import 'authnavigator.dart';
 import 'blocs/bloc.dart';
+import 'package:tale/textboxstyle.dart';
 
 class Login extends StatelessWidget {
   //initial declaration of variables
-  GoogleSignIn _googleSignIn = GoogleSignIn();
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   String _email, _password;
-  Bloc bloc = new Bloc();
+  final Bloc bloc = new Bloc();
 
   //email and pass handler
 
-  Future<FirebaseUser> emailHandler() async {
+  Future<FirebaseUser> emailHandler(BuildContext context) async {
     bloc.password.listen((password) => _password = password);
     print(_password);
     bloc.email.listen((email) => _email = email);
@@ -24,7 +25,18 @@ class Login extends StatelessWidget {
     //bloc._password = preferences.get("password");
 
     FirebaseUser user = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: _email, password: _password);
+        .signInWithEmailAndPassword(email: _email, password: _password)
+        .then((FirebaseUser user) {})
+        .catchError((e) {
+      showDialog(
+        context: context,
+        builder: (context) => myAlert(
+              context,
+              "Ohh!",
+              "The password is invalid or the user does not have an account.",
+            ),
+      );
+    });
     print(user);
     return user;
   }
@@ -153,9 +165,14 @@ class Login extends StatelessWidget {
                   ),
                   Center(
                     child: GestureDetector(
-                      onTap: () => (context) {
-                            Navigator.pushReplacementNamed(context, '/signup');
-                          },
+                      onTap: () {
+                        //Todo need to implement forget password method
+                        showDialog(
+                            context: context,
+                            builder: (context) => myAlert(
+                                context, "Reset Password", "Todo program it"));
+                        print("password");
+                      },
                       child: Text(
                         "Forget Password?",
                         textScaleFactor: 1.1,
@@ -209,68 +226,37 @@ class Login extends StatelessWidget {
     googleSignInHandler().then((FirebaseUser user) {
       print(user);
       var nav = AuthNavigator();
-      nav.StoreUser(user, context);
+      nav.storeUser(user, context);
     }).catchError((e) => print(e));
   }
 
   //LOGIN with email
 
   void loginWithEmail(BuildContext context) async {
-    emailHandler().then((FirebaseUser user) {
+    emailHandler(context).then((FirebaseUser user) {
       print(user);
-      var nav = AuthNavigator();
-      nav.StoreUser(user, context);
-    }).catchError((e) => print(e));
+      Navigator.of(context).pushNamed('/home');
+    }).catchError((e) {
+      print(e);
+    });
   }
 }
 
-InputDecoration inputDec(String label, AsyncSnapshot snapshot) {
-  return InputDecoration(
-    errorText: snapshot.error,
-    errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(0),
-      borderSide: BorderSide(color: Colors.red, width: 4),
+Widget myAlert(BuildContext context, String title, String content) {
+  return AlertDialog(
+    shape:
+        BeveledRectangleBorder(side: BorderSide(color: Colors.black, width: 2)),
+    title: Text(
+      title,
+      textScaleFactor: 1.2,
+      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
     ),
-    labelStyle: TextStyle(
-      color: Colors.black,
-      fontSize: 20,
+    contentPadding: EdgeInsets.all(20),
+    content: Text(
+      content,
+      style: TextStyle(
+        fontWeight: FontWeight.w800,
+      ),
     ),
-    border: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.black, width: 4),
-      borderRadius: BorderRadius.circular(0),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(0),
-      borderSide: BorderSide(color: Colors.black54, width: 4),
-    ),
-    labelText: label,
   );
 }
-/*
-Widget googleWidget(BuildContext context) {
-  return FlatButton(
-      padding: EdgeInsets.all(10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0),
-        side: BorderSide(color: Colors.black, width: 4.0),
-      ),
-      onPressed: () => loginWithGoogle(context),
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-            width: 8,
-          ),
-          SvgPicture.asset(
-            "assets/google.svg",
-            height: 30.0,
-            width: 30.0,
-          ),
-          SizedBox(
-            width: 24,
-          ),
-          Text(
-            "Sign in".toUpperCase(),
-            style: TextStyle(fontSize: 30),
-          ),
-        ],
-      ));*/

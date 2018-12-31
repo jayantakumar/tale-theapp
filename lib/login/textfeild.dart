@@ -14,9 +14,9 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller = new TextEditingController();
   final bool obscureText;
   final FocusNode focusNode, nextfocus;
-  String labelText, shareKey, errorText;
-  TextInputType keyboardType;
-  Function(String) onChanged;
+  final String labelText, shareKey, errorText;
+  final TextInputType keyboardType;
+  final Function(String) onChanged;
   @override
   Widget build(BuildContext context) {
     return TextFormField(

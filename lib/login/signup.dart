@@ -153,10 +153,23 @@ class Signup extends StatelessWidget {
                     height: 40,
                   ),
                   Center(
-                    child: Text(
-                      "Aldready with us?\nLog in",
-                      textScaleFactor: 1.1,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context)
+                          .pushReplacementNamed('/loginMaster'),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            "Aldready with us?",
+                            textScaleFactor: 1.1,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "Login",
+                            textScaleFactor: 1.1,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -205,7 +218,7 @@ class Signup extends StatelessWidget {
     googleSignInHandler().then((FirebaseUser user) {
       print(user);
       var nav = AuthNavigator();
-      nav.StoreUser(user, context);
+      nav.storeUser(user, context);
     }).catchError((e) => print(e));
   }
 
@@ -215,7 +228,7 @@ class Signup extends StatelessWidget {
     emailHandler().then((FirebaseUser user) {
       print(user);
       var nav = AuthNavigator();
-      nav.StoreUser(user, context);
+      nav.storeUser(user, context);
     }).catchError((e) => print(e));
   }
 }

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class Cardy extends StatelessWidget {
   //
-  Widget body;
-  Color color;
+  final Widget body;
+  final Color color;
 
-  String title, subtitle;
-  bool justified = false;
-
+  final String title, subtitle, route;
+  final bool justified, bottomTitle;
+  final double height, width, titleSize;
   //constructor
 
   Cardy({
@@ -16,12 +16,17 @@ class Cardy extends StatelessWidget {
     this.subtitle,
     this.justified = false,
     this.body,
+    this.height = 100,
+    this.width = 100,
+    this.bottomTitle = false,
+    this.titleSize = 30,
+    this.route,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: () => print("hello"),
+      // onLongPress: () => print("hello"),
       child: Card(
         shape: RoundedRectangleBorder(
           side: BorderSide(
@@ -38,6 +43,10 @@ class Cardy extends StatelessWidget {
           subtitle: subtitle,
           justified: justified,
           body: body,
+          height: height,
+          width: width,
+          bottomTitle: bottomTitle,
+          titleSize: this.titleSize,
         ),
       ),
     );
@@ -47,23 +56,29 @@ class Cardy extends StatelessWidget {
 //this block contains the body contents 0f the cards in home screen like title and subtitle
 
 class BodyOfCardy extends StatelessWidget {
-  BodyOfCardy({
-    Key key,
-    @required this.title,
-    this.subtitle,
-    this.justified,
-    this.body,
-  }) : super(key: key);
+  BodyOfCardy(
+      {Key key,
+      @required this.title,
+      this.titleSize = 30,
+      this.subtitle,
+      this.width = 100,
+      this.height = 100,
+      this.justified,
+      this.body,
+      this.bottomTitle = false})
+      : super(key: key);
 
-  String title;
-  String subtitle;
-  bool justified;
-  Widget body;
+  final String title;
+  final String subtitle;
+  final bool justified;
+  final bool bottomTitle;
+  final Widget body;
+  final double height, width, titleSize;
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
-      width: 100,
+      height: height,
+      width: width,
       color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.only(
@@ -73,10 +88,20 @@ class BodyOfCardy extends StatelessWidget {
           bottom: 8.0,
         ),
         child: Column(
-          crossAxisAlignment:
-              justified ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+          crossAxisAlignment: justified
+              ? CrossAxisAlignment.center
+              : (bottomTitle
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start),
           children: <Widget>[
-            title != "" ? new CardTitle(title: title) : Container(),
+            bottomTitle
+                ? Container()
+                : (title != ""
+                    ? new CardTitle(
+                        title: title,
+                        titleSize: titleSize,
+                      )
+                    : Container()),
             Expanded(
               child: Container(),
             ),
@@ -86,7 +111,12 @@ class BodyOfCardy extends StatelessWidget {
             ),
             subtitle != null
                 ? new CardSubtitle(subtitle: subtitle)
-                : new Container(),
+                : (bottomTitle
+                    ? new CardTitle(
+                        title: title,
+                        titleSize: titleSize,
+                      )
+                    : new Container()),
           ],
         ),
       ),
@@ -102,7 +132,7 @@ class CardSubtitle extends StatelessWidget {
     this.subtitle,
   }) : super(key: key);
 
-  String subtitle;
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -126,18 +156,25 @@ class CardTitle extends StatelessWidget {
   CardTitle({
     Key key,
     @required this.title,
+    this.titleSize,
   }) : super(key: key);
 
-  String title;
+  final String title;
+  final double titleSize;
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 30,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Text(
+        title,
+        // textScaleFactor: titleSize,
+        //textAlign: TextAlign.justify,
+        style: TextStyle(
+          fontSize: titleSize,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
     );
   }

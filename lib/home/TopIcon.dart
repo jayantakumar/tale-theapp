@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class TopIcon extends StatelessWidget {
-  String _path;
+  final String _path;
 
   TopIcon(this._path);
 

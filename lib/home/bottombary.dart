@@ -5,16 +5,19 @@ import 'package:flutter/material.dart';
 class BottomBary extends StatelessWidget {
   const BottomBary({
     Key key,
+    this.color = Colors.yellow,
   }) : super(key: key);
 
+  final Color color;
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.yellow,
       type: MaterialType.canvas,
-      child: Container(
+      child: AnimatedContainer(
         width: double.infinity,
+        color: color,
         height: 50,
+        duration: Duration(milliseconds: 400),
       ),
       shape: Border(
         top: BorderSide(color: Colors.black, width: 4),

@@ -3,18 +3,28 @@ import 'package:flutter/material.dart';
 //FLOATING ACTION BUTTON IN OUR APP
 
 class Floater extends StatelessWidget {
-  const Floater({
-    Key key,
-  }) : super(key: key);
+  Floater(
+      {Key key,
+      this.icon = Icons.add,
+      this.onPressed,
+      this.isAnimated = false,
+      this.animatedIcon})
+      : super(key: key);
 
+  final VoidCallback onPressed;
+  final IconData icon;
+  final bool isAnimated;
+  final AnimatedIcon animatedIcon;
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () {},
-      child: Icon(
-        Icons.add,
-        size: 30,
-      ),
+      onPressed: onPressed == null ? () {} : onPressed,
+      child: isAnimated
+          ? animatedIcon
+          : Icon(
+              icon,
+              size: 30,
+            ),
       backgroundColor: Colors.red,
       shape: CircleBorder(
         side: BorderSide(color: Colors.black, width: 2.0),

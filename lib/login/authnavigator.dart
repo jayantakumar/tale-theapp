@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tale/main.dart';
+//import 'package:tale/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:firebase_core/firebase_core.dart';
@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthNavigator {
   Firestore f = Firestore.instance;
 
-  StoreUser(FirebaseUser user, context) async {
+  storeUser(FirebaseUser user, context) async {
     f.settings(
       timestampsInSnapshotsEnabled: true,
     );
@@ -16,8 +16,8 @@ class AuthNavigator {
       'userid': user.uid,
       'pic_url': user.photoUrl
     }).then((val) async {
-      await Future.delayed(Duration(seconds: 5));
-      Navigator.pop(context);
+      // await Future.delayed(Duration(seconds: 1));
+      //Navigator.pop(context);
       Navigator.pushReplacementNamed(context, '/home');
     });
   }

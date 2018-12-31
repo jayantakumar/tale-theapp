@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
+//import 'package:flutter/scheduler.dart' show timeDilation;
 
 class Wave extends StatefulWidget {
   final Size size;
@@ -131,7 +131,7 @@ class MyPaint extends CustomPainter {
 
   @override
   void paint(ui.Canvas canvas, ui.Size size) {
-    Paint paint = Paint()
+    Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 5.0
       ..color = Colors.black;
