@@ -15,17 +15,13 @@ import 'login/loginMaster.dart';
 import 'package:tale/todo/todo.dart';
 import 'todo/ui/todomain.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tale/remainder/mainui.dart';
+import "package:tale/diary/ui/dairyUi.dart";
+import 'package:tale/diary/ui/addEventUi.dart';
+
+//LIST OF GLOBAL VARIABLES
 
 FirebaseAuth auth = FirebaseAuth.instance;
-bool hasloggedin = false;
-
-void main() {
-  hasloggedin = auth.currentUser() == null;
-  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-  runApp(MyApp());
-}
-
+bool hasLoggedIn = false;
 var myTheme = ThemeData(
     //buttonColor: Colors.white,
     primaryColor: Colors.yellow,
@@ -37,17 +33,25 @@ var myTheme = ThemeData(
           fontWeight: FontWeight.bold,
           color: Colors.black),
     ));
-
 List<Widget> page = [
   Home(name: "Lyon"),
   ListOfTodo(),
 ];
+
+//THE MAIN FUNCTION OF THE PACK
+
+void main() {
+  hasLoggedIn = auth.currentUser() == null;
+  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  //TODO:DUMMY NAME TO BE REPLACED
   String _name = "Lyon";
 
   @override
@@ -62,8 +66,7 @@ class _MyAppState extends State<MyApp> {
       theme: myTheme,
       color: Colors.yellow,
       debugShowCheckedModeBanner: false,
-      home: ReminderList(),
-      // home: hasloggedin ? LoginMaster() : Home(name: _name),
+      home: AddUI(),
       routes: <String, WidgetBuilder>{
         '/login': (_) => new Login(),
         'pages': (_) => new Pages(),
@@ -72,7 +75,7 @@ class _MyAppState extends State<MyApp> {
         '/signupMaster': (_) => new SignUpMaster(),
         '/loginMaster': (_) => new LoginMaster(),
         '/todo': (_) => new ListOfTodo(),
-        '/reminder': (_) => new ReminderList(),
+        '/diary': (_) => new DiaryMainUI(),
       },
     );
   }
@@ -179,10 +182,14 @@ class HomeState extends State<Home> {
     return [
       Padding(
         padding: const EdgeInsets.only(bottom: 30.0),
-        child: Cardy(
-          title: "Stories",
-          color: Colors.pink,
-          subtitle: "Write your story",
+        child: GestureDetector(
+          onTap: () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => DiaryMainUI())),
+          child: Cardy(
+            title: "Stories",
+            color: Colors.pink,
+            subtitle: "Write your story",
+          ),
         ),
       ),
       GestureDetector(

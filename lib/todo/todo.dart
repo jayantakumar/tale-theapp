@@ -6,6 +6,8 @@ import 'package:tale/todo/util/databaseClient.dart';
 import 'package:tale/boldtextstyle.dart';
 import 'package:tale/textboxstyle.dart';
 
+//the ui inside every major todo_title , contains code to update,delete,add todo_items from ui
+
 class TodoMain extends StatefulWidget {
   TodoMain({@required this.title, this.color});
   final String title;
@@ -143,7 +145,7 @@ class _TodoMainState extends State<TodoMain> with TickerProviderStateMixin {
                         child: TextField(
                           autofocus: true,
                           autocorrect: true,
-                          decoration: inputdec,
+                          decoration: inputDecoration,
                           controller: _controller,
                           //focusNode: node,
                           maxLength: 100,
@@ -176,7 +178,7 @@ class _TodoMainState extends State<TodoMain> with TickerProviderStateMixin {
                         canShow ? null : _updateDone(itemList[index], index);
                       },
                       onLongPress: () {
-                        _update(itemList[index], index);
+                        _showUpdateUI(itemList[index], index);
                       },
                       child: Row(
                         children: <Widget>[
@@ -243,7 +245,7 @@ class _TodoMainState extends State<TodoMain> with TickerProviderStateMixin {
     _controller.clear();
   }
 
-  //the function that handles on submit function
+  //the function that handles on submit function,CREATES A NEW TODO_ITEM FOR THE GIVEN VALUE
 
   void _handleSubmit(String text) async {
     _controller.clear();
@@ -260,7 +262,7 @@ class _TodoMainState extends State<TodoMain> with TickerProviderStateMixin {
     }
   }
 
-  //the function that reads the list and updates the ui
+  //the function that reads the list and updates the UI IF ANY CHANGE HAPPENS
 
   readTodoList() async {
     List items = await db(title).getItems();
@@ -283,7 +285,7 @@ class _TodoMainState extends State<TodoMain> with TickerProviderStateMixin {
     });
   }
 
-  //function to update when we press the done button
+  //function to update when we swipe to cross the task
 
   _updateDone(TodoItem item, int index) async {
     String bool;
@@ -297,7 +299,7 @@ class _TodoMainState extends State<TodoMain> with TickerProviderStateMixin {
       "id": item.id,
       "done": bool,
     });
-    _handleSubmitUpdate(itemList[index], index);
+    _onUpdate(itemList[index], index);
     await db(title).updateItem(updateItem);
     setState(() {
       readTodoList();
@@ -306,7 +308,7 @@ class _TodoMainState extends State<TodoMain> with TickerProviderStateMixin {
 
   //todo update  the ui for updating the todo item
 
-  _update(TodoItem item, int index) {
+  _showUpdateUI(TodoItem item, int index) {
     var alert = new AlertDialog(
       content: new Row(
         children: <Widget>[
@@ -333,7 +335,7 @@ class _TodoMainState extends State<TodoMain> with TickerProviderStateMixin {
               "id": item.id,
               "done": "False",
             });
-            _handleSubmitUpdate(itemList[index], index);
+            _onUpdate(itemList[index], index);
             await db(title).updateItem(updatedItem);
             setState(() {
               readTodoList();
@@ -352,7 +354,7 @@ class _TodoMainState extends State<TodoMain> with TickerProviderStateMixin {
 
 //handles the update facility of the note
 
-  void _handleSubmitUpdate(TodoItem item, int index) {
+  void _onUpdate(TodoItem item, int index) {
     setState(() {
       itemList
           .removeWhere((element) => itemList[index].itemName == item.itemName);
@@ -362,7 +364,7 @@ class _TodoMainState extends State<TodoMain> with TickerProviderStateMixin {
 
 //controls the decoration of the input box
 
-var inputdec = InputDecoration(
+var inputDecoration = InputDecoration(
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(0),
       borderSide: BorderSide(color: Colors.red, width: 4),

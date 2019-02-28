@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Cardy extends StatelessWidget {
-  //
+  //      __***variable declaration***__      //
+
   final Widget body;
   final Color color;
-
   final String title, subtitle, route;
   final bool justified, bottomTitle;
   final double height, width, titleSize;
-  //constructor
 
+  //constructor//
   Cardy({
     @required this.color,
     @required this.title,

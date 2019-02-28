@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-//title or name appearing at the top left
+//title or name appearing at the top left of the app bar for instance HI LYON
 
 class HomeTitle extends StatelessWidget {
   const HomeTitle({

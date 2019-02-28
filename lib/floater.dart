@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 //FLOATING ACTION BUTTON IN OUR APP
 
 class Floater extends StatelessWidget {
+  //CONSTRUCTOR
   Floater(
       {Key key,
       this.icon = Icons.add,
@@ -10,11 +11,13 @@ class Floater extends StatelessWidget {
       this.isAnimated = false,
       this.animatedIcon})
       : super(key: key);
+  //DECLARING FINAL VARIABLES
 
   final VoidCallback onPressed;
   final IconData icon;
   final bool isAnimated;
   final AnimatedIcon animatedIcon;
+  //THE UI ITSELF
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(

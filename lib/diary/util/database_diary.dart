@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:tale/todo/model/todoitems.dart';
+import 'package:tale/diary/model/dairy_items.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -10,18 +10,20 @@ import 'package:sqflite/sqflite.dart';
 class DataBaseHelper {
   //FACTORY CONSTRUCTOR
 
-  static DataBaseHelper _instance(String text) =>
-      new DataBaseHelper.internal(text);
-  factory DataBaseHelper(String _title) => _instance(_title);
+  static DataBaseHelper _instance() => new DataBaseHelper.internal();
+  factory DataBaseHelper() => _instance();
 
   //CONTENTS AND TITLE OF THE DATABASE TABLE BEING DECLARED
 
-  final String title;
-  final String tableName = "todoTbl";
+  final String tableName = "diaryTbl";
   final String columnId = "id";
-  final String columnItemName = "itemName";
-  final String columnDateCreated = "dateCreated";
-  final String done = "done";
+  final String columnItemName = "diaryItemName";
+  final String year = "year";
+  final String month = "month";
+  final String date = "date";
+  final String time = "time";
+  final String emoji = "emoji";
+  final String emotion = "emotion";
 
   Database _db;
 
@@ -33,14 +35,13 @@ class DataBaseHelper {
     return _db;
   }
 
-  DataBaseHelper.internal(this.title);
+  DataBaseHelper.internal();
 
   //THE FUNCTION THAT INITIALIZES THE DATABASE
 
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
-    String path =
-        join(documentDirectory.path, "${title.replaceAll(" ", "_")}_db.db");
+    String path = join(documentDirectory.path, "dairy123_db.db");
     var ourDb = await openDatabase(path, onCreate: _onCreate, version: 1);
     return ourDb;
   }
@@ -57,12 +58,12 @@ class DataBaseHelper {
 
   void _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $tableName(id INTEGER PRIMARY KEY, $columnItemName TEXT,$columnDateCreated TEXT,$done TEXT) ");
+        "CREATE TABLE $tableName(id INTEGER PRIMARY KEY, $columnItemName TEXT,$year TEXT,$month TEXT,$date TEXT,$time TEXT,$emoji TEXT,$emotion TEXT) ");
   }
 
   //FUNCTION THAT SAVES THE ITEM BEING PASSED ON IN THE DATABASE
 
-  Future<int> saveItem(TodoItem item) async {
+  Future<int> saveItem(DiaryItem item) async {
     var dbClient = await db;
     int res = await dbClient.insert("$tableName", item.toMap());
     print(res.toString());
@@ -89,12 +90,12 @@ class DataBaseHelper {
 
   //FUNCTION THAT RETURNS THE  ITEM THAT MATCHES THE ID BEING PASSED ON TO THE DATABASE
 
-  Future<TodoItem> getItem(int id) async {
+  Future<DiaryItem> getItem(int id) async {
     var dbClient = await db;
     var result =
         await dbClient.rawQuery("SELECT * FROM $tableName WHERE id = $id");
     if (result.length == 0) return null;
-    return new TodoItem.fromMap(result.first);
+    return new DiaryItem.fromMap(result.first);
   }
 
   //THE FUNCTION THAT DELETES THE ITEM WHICH MATCHES THE ITEM ID
@@ -107,7 +108,7 @@ class DataBaseHelper {
 
   //FUNCTION THAT UPDATES THE ITEM_VALUE IN THE DATABASE
 
-  Future<int> updateItem(TodoItem item) async {
+  Future<int> updateItem(DiaryItem item) async {
     var dbClient = await db;
     return await dbClient.update(tableName, item.toMap(),
         where: "$columnId=?", whereArgs: [item.id]);

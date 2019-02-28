@@ -9,11 +9,12 @@ import 'package:tale/home/cardy.dart';
 import 'package:tale/boldtextstyle.dart';
 import 'package:tale/todo/todo.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:tale/style/pagetransition.dart';
 import 'dart:io';
 import 'package:tale/main.dart';
-
 import 'package:tale/todo/util/databaseClient.dart';
+
+//THIS IS THE MAIN UI THAT POPS UP AS SOON AS THE USER CLICKS THE TODO_BUTTON
+//THIS CONTAINS CODE FOR THE ANIMATIONS THE DATABASE LOGIC ETC
 
 //List of colors add more when needed but change the looper function also
 
@@ -49,16 +50,14 @@ class _ListOfTodoState extends State<ListOfTodo>
 
   //looper function loops through colors list and gives out the correct list
   //change this if you changed colors list.
+  //TODO THERE EXISTS AN RUNTIME ERROR IN THE FOLLOWING FUNCTION PLEASE CHANGE IT..
 
   Color looper(int a) {
-    if (a > 5) {
-      if (a < 10)
-        a = a - 6;
-      else
-        a = a % 10 - 6;
+    if (a <= 5)
       return myColors[a];
-    } else
-      return myColors[a];
+    else
+      for (a; a > 5; a = a - 5);
+    return myColors[a];
   }
 
   //Animation controller for Animated icon
