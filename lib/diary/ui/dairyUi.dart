@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tale/diary/model/dairy_items.dart';
 import 'package:tale/diary/ui/addEventUi.dart';
 import 'package:tale/diary/util/database_diary.dart';
-import "package:tale/home/cardy.dart";
+import 'package:intl/intl.dart';
 import 'dart:math';
 
 class DiaryMainUI extends StatefulWidget {
@@ -21,18 +21,6 @@ const List<Color> myColors = [
 
 class _DiaryMainUIState extends State<DiaryMainUI> {
   DataBaseHelper db = DataBaseHelper.internal();
-
-  onAdd() async {
-    DiaryItem item = DiaryItem("won the game", "12/12/2019", "⚽", "Happy",
-        " 12", "${DateTime.now().hour}:${DateTime.now().minute}", "2019");
-    int _saveId;
-    _saveId = await db.saveItem(item);
-    var addeditem = await db.getItem(_saveId);
-    print(addeditem.emotion);
-    setState(() {
-      itemList.add(addeditem);
-    });
-  }
 
   delete(int index) async {
     while (index < 1) {

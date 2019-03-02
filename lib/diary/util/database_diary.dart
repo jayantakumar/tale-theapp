@@ -4,7 +4,6 @@ import 'package:tale/diary/model/dairy_items.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-
 //THE CLASS THAT MAINTAINS AND HELPS THE CREATION AND USAGE OF DATABASES
 
 class DataBaseHelper {
@@ -24,6 +23,7 @@ class DataBaseHelper {
   final String time = "time";
   final String emoji = "emoji";
   final String emotion = "emotion";
+  final String activity = "activity";
 
   Database _db;
 
@@ -41,7 +41,7 @@ class DataBaseHelper {
 
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentDirectory.path, "dairy123_db.db");
+    String path = join(documentDirectory.path, "dairy1234_db.db");
     var ourDb = await openDatabase(path, onCreate: _onCreate, version: 1);
     return ourDb;
   }
@@ -58,7 +58,7 @@ class DataBaseHelper {
 
   void _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $tableName(id INTEGER PRIMARY KEY, $columnItemName TEXT,$year TEXT,$month TEXT,$date TEXT,$time TEXT,$emoji TEXT,$emotion TEXT) ");
+        "CREATE TABLE $tableName(id INTEGER PRIMARY KEY, $columnItemName TEXT,$year TEXT,$month TEXT,$date TEXT,$time TEXT,$emoji TEXT,$activity,$emotion TEXT) ");
   }
 
   //FUNCTION THAT SAVES THE ITEM BEING PASSED ON IN THE DATABASE
