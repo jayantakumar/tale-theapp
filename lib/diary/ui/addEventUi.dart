@@ -43,9 +43,7 @@ class _AddUIState extends State<AddUI> {
                   ),
                 ),
                 alignment: Alignment.centerLeft,
-                foregroundDecoration: ShapeDecoration(
-                    shape: Border(
-                        bottom: BorderSide(width: 4, color: Colors.black))),
+                foregroundDecoration: ShapeDecoration(shape: Border()),
               ),
             ),
             Center(

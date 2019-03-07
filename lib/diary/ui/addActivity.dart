@@ -6,7 +6,8 @@ import 'package:tale/diary/model/dairy_items.dart';
 import 'package:tale/floater.dart';
 import 'package:intl/intl.dart';
 import 'package:tale/diary/util/database_diary.dart';
-
+import 'addEventUi.dart';
+import 'dairyUi.dart';
 /*
 * This page contains all the code that handles the ADD ACTIVITY page
 * Here at the bottom is the list that has all the activities Available
@@ -34,6 +35,9 @@ class _AddActivityState extends State<AddActivity> {
   DataBaseHelper db = DataBaseHelper.internal();
   //
   ActivityObject selectedActivityObject;
+  //
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  //
   //init state handles animation , list that updates the grid etc..
   @override
   void initState() {
@@ -66,6 +70,7 @@ class _AddActivityState extends State<AddActivity> {
   //the rx_dart stuff that controls the change in cupertino picker
   final subject = new PublishSubject<int>();
 
+  TopBar topBar = new TopBar();
   //the list of text inside cupertino picker
 
   List<String> textList = [
@@ -110,6 +115,7 @@ class _AddActivityState extends State<AddActivity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       floatingActionButton: Floater(
         icon: Icons.done,
         onPressed: () {
@@ -117,92 +123,94 @@ class _AddActivityState extends State<AddActivity> {
         },
         isAnimated: false,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: new BottomBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            new TopBar(),
-            SizedBox(
-              height: 20,
-            ),
-            new AddNoteBloc(textEditingController: textEditingController),
-            SizedBox(height: 20),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Row(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      //bottomNavigationBar: new BottomBar(),
+      body: Builder(
+        builder: (BuildContext context) => SingleChildScrollView(
+              child: Column(
                 children: <Widget>[
-                  Align(
-                    child: IconButton(
-                        icon: Icon(Icons.menu),
-                        onPressed: () {
-                          showCupertinoModalPopup(
-                              context: context,
-                              builder: (context) => SizedBox(
-                                    child: picker(context),
-                                    height: MediaQuery.of(context).size.height /
-                                        2.5,
-                                  ));
-                        }),
-                    alignment: Alignment.centerLeft,
-                  ),
-                  Expanded(child: Container()),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      activityTitle.toString(),
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.combine(
-                              [TextDecoration.underline])),
+                  new TopBar(),
+                  new AddNoteBloc(textEditingController: textEditingController),
+                  SizedBox(height: 20),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      children: <Widget>[
+                        Align(
+                          child: IconButton(
+                              icon: Icon(Icons.menu),
+                              onPressed: () {
+                                showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (context) => SizedBox(
+                                          child: picker(context),
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              2.5,
+                                        ));
+                              }),
+                          alignment: Alignment.centerLeft,
+                        ),
+                        Expanded(child: Container()),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            activityTitle.toString(),
+                            style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.combine(
+                                    [TextDecoration.underline])),
+                          ),
+                        ),
+                        Expanded(child: Container()),
+                        Align(
+                          child: IconButton(
+                              icon: Icon(Icons.add), onPressed: () {}),
+                          alignment: Alignment.centerRight,
+                        ),
+                      ],
                     ),
                   ),
-                  Expanded(child: Container()),
-                  Align(
-                    child: IconButton(icon: Icon(Icons.add), onPressed: () {}),
-                    alignment: Alignment.centerRight,
+                  SizedBox(height: 20),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 2,
+                    width: MediaQuery.of(context).size.width,
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 500),
+                      child: GridView.custom(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 100,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 10),
+                        childrenDelegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            return InkWell(
+                              child: GridItem(items[index]),
+                              splashColor: color.withOpacity(0.5),
+                              onTap: () {
+                                setState(() {
+                                  items.forEach((i) => i.isSelected = false);
+                                  items[index].isSelected = true;
+                                  selectedActivityObject = items[index].obj;
+                                });
+                              },
+                            );
+                          },
+                          childCount: items.length,
+                        ),
+                        physics: AlwaysScrollableScrollPhysics(),
+                      ),
+                      opacity: items.isEmpty ? 0 : 1,
+                    ),
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 20),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 2,
-              width: MediaQuery.of(context).size.width,
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 500),
-                child: GridView.custom(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 100,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10),
-                  childrenDelegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return InkWell(
-                        child: GridItem(items[index]),
-                        splashColor: color.withOpacity(0.5),
-                        onTap: () {
-                          setState(() {
-                            items.forEach((i) => i.isSelected = false);
-                            items[index].isSelected = true;
-                            selectedActivityObject = items[index].obj;
-                          });
-                        },
-                      );
-                    },
-                    childCount: items.length,
-                  ),
-                  physics: AlwaysScrollableScrollPhysics(),
-                ),
-                opacity: items.isEmpty ? 0 : 1,
-              ),
-            ),
-          ],
-        ),
-        //physics: NeverScrollableScrollPhysics(),
+              //physics: NeverScrollableScrollPhysics(),
 
-        physics: BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
+            ),
       ),
     );
   }
@@ -217,21 +225,27 @@ class _AddActivityState extends State<AddActivity> {
   }
 
   onSubmit(String text) async {
-    if (text != "" && text != null) {
+    if (text != "" && text != null && selectedActivityObject != null) {
       DiaryItem diaryItem = DiaryItem(
           text,
-          DateTime.now().day.toString(),
+          topBar.date.day.toString(),
           selectedActivityObject.emoji,
           selectedActivityObject.activity,
           widget.mood,
-          DateTime.now().month.toString(),
-          DateFormat.MMMd().format(DateTime.now()),
-          DateTime.now().year.toString());
+          topBar.date.month.toString(),
+          topBar.time.format(context),
+          topBar.date.year.toString());
       int _saveId;
       _saveId = await db.saveItem(diaryItem);
       var addedItem = await db.getItem(_saveId);
       print(addedItem.emotion);
-    }
+      Navigator.of(context)
+          .pushReplacement(SlideRightRoute(widget: DiaryMainUI()));
+    } else
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Write something or Select an activity"),
+        duration: Duration(milliseconds: 1100),
+      ));
   }
 }
 
@@ -249,20 +263,16 @@ class AddNoteBloc extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 500),
-      decoration: ShapeDecoration(
-          color: color.withOpacity(0.6),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-              side: BorderSide(color: Colors.black, width: 4))),
+      decoration: ShapeDecoration(color: color, shape: Border()),
       height: 140,
-      width: 0.95 * MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width,
       curve: Curves.easeIn,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(height: 15),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(12.0),
             child: TextField(
               decoration: inputDec("Add Note", null),
               maxLength: 150,
@@ -278,10 +288,35 @@ class AddNoteBloc extends StatelessWidget {
 //the bar at the top of the screen
 
 class TopBar extends StatelessWidget {
-  const TopBar({
+  TopBar({
     Key key,
   }) : super(key: key);
 
+  DateTime _date = new DateTime.now();
+  TimeOfDay _time = new TimeOfDay.now();
+  Future<Null> selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: _date,
+        firstDate: new DateTime(2016),
+        lastDate: new DateTime(2020));
+    if (picked != null && picked != _date) {
+      _date = picked;
+      print(_date.toIso8601String());
+    }
+  }
+
+  Future<Null> selectTime(BuildContext context) async {
+    final TimeOfDay picked =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (picked != null && picked != _time) {
+      _time = picked;
+      print(_time.format(context));
+    }
+  }
+
+  TimeOfDay get time => _time;
+  DateTime get date => _date;
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -318,20 +353,23 @@ class TopBar extends StatelessWidget {
               Icons.access_time,
               color: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () {
+              selectTime(context);
+            },
           ),
           IconButton(
             icon: Icon(
               Icons.calendar_today,
               color: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () {
+              selectDate(context);
+            },
           ),
         ],
       ),
       alignment: Alignment.centerLeft,
-      foregroundDecoration: ShapeDecoration(
-          shape: Border(bottom: BorderSide(width: 4, color: Colors.black))),
+      foregroundDecoration: ShapeDecoration(shape: Border()),
     );
   }
 }
@@ -418,7 +456,7 @@ InputDecoration inputDec(String label, AsyncSnapshot snapshot) {
     errorText: snapshot == null ? null : snapshot.error,
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(5),
-      borderSide: BorderSide(color: Colors.red, width: 4),
+      borderSide: BorderSide(color: Colors.red, width: 3),
     ),
     labelStyle: TextStyle(
       color: Colors.black,
@@ -426,12 +464,12 @@ InputDecoration inputDec(String label, AsyncSnapshot snapshot) {
     ),
     counterStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
     border: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.black, width: 4),
+      borderSide: BorderSide(color: Colors.black, width: 3),
       borderRadius: BorderRadius.circular(5),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(5),
-      borderSide: BorderSide(color: Colors.black, width: 4),
+      borderSide: BorderSide(color: Colors.black54, width: 3),
     ),
     filled: true,
     fillColor: Colors.white,

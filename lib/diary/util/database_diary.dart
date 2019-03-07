@@ -41,7 +41,7 @@ class DataBaseHelper {
 
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentDirectory.path, "dairy1234_db.db");
+    String path = join(documentDirectory.path, "dairy12345_db.db");
     var ourDb = await openDatabase(path, onCreate: _onCreate, version: 1);
     return ourDb;
   }
@@ -75,7 +75,7 @@ class DataBaseHelper {
   Future<List> getItems() async {
     var dbClient = await db;
     var result = await dbClient
-        .rawQuery("SELECT * FROM $tableName ORDER BY $columnItemName ASC");
+        .rawQuery("SELECT * FROM $tableName ORDER BY $columnId DESC");
     return result.toList();
   }
 

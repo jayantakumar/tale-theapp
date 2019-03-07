@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
       theme: myTheme,
       color: Colors.yellow,
       debugShowCheckedModeBanner: false,
-      home: AddUI(),
+      home: Home(name: _name),
       routes: <String, WidgetBuilder>{
         '/login': (_) => new Login(),
         'pages': (_) => new Pages(),
@@ -183,8 +183,8 @@ class HomeState extends State<Home> {
       Padding(
         padding: const EdgeInsets.only(bottom: 30.0),
         child: GestureDetector(
-          onTap: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => DiaryMainUI())),
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => DiaryMainUI())),
           child: Cardy(
             title: "Stories",
             color: Colors.pink,

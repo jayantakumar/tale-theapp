@@ -8,6 +8,7 @@ class Floater extends StatelessWidget {
       {Key key,
       this.icon = Icons.add,
       this.onPressed,
+      this.color = Colors.red,
       this.isAnimated = false,
       this.animatedIcon})
       : super(key: key);
@@ -15,6 +16,7 @@ class Floater extends StatelessWidget {
 
   final VoidCallback onPressed;
   final IconData icon;
+  final Color color;
   final bool isAnimated;
   final AnimatedIcon animatedIcon;
   //THE UI ITSELF
@@ -28,7 +30,7 @@ class Floater extends StatelessWidget {
               icon,
               size: 30,
             ),
-      backgroundColor: Colors.red,
+      backgroundColor: color,
       shape: CircleBorder(
         side: BorderSide(color: Colors.black, width: 2.0),
       ),
