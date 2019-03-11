@@ -7,13 +7,14 @@ class BottomBary extends StatelessWidget {
 
   const BottomBary({
     Key key,
-    this.color = Colors.yellow,
+    this.color = Colors.indigo,
+    this.height = 50,
   }) : super(key: key);
 
   //color variable
 
   final Color color;
-
+  final double height;
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -21,7 +22,7 @@ class BottomBary extends StatelessWidget {
       child: AnimatedContainer(
         width: double.infinity,
         color: color,
-        height: 50,
+        height: height,
         duration: Duration(milliseconds: 400),
       ),
       shape: Border(

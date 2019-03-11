@@ -7,8 +7,8 @@ import 'package:tale/floater.dart';
 import 'package:tale/home/bottombary.dart';
 import 'package:tale/home/cardy.dart';
 import 'package:tale/boldtextstyle.dart';
+import 'package:tale/routeTransitionAnimation.dart';
 import 'package:tale/todo/todo.dart';
-import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:tale/main.dart';
 import 'package:tale/todo/util/databaseClient.dart';
@@ -40,8 +40,11 @@ Future<List<String>> getList() async {
 }
 
 class ListOfTodo extends StatefulWidget {
+  const ListOfTodo(this.controller);
+
   @override
   _ListOfTodoState createState() => _ListOfTodoState();
+  final PageController controller;
 }
 
 class _ListOfTodoState extends State<ListOfTodo>
@@ -56,7 +59,7 @@ class _ListOfTodoState extends State<ListOfTodo>
     if (a <= 5)
       return myColors[a];
     else
-      for (a; a > 5; a = a - 5);
+      for (; a > 5; a = a - 5);
     return myColors[a];
   }
 
@@ -101,10 +104,12 @@ class _ListOfTodoState extends State<ListOfTodo>
           controller.reverse();
         });
       } else
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => Pages(
-                  pageNo: 0,
-                )));
+        Navigator.of(context).pushAndRemoveUntil(
+            SlideRoute(
+              initialSlideOffset: Offset(-1, 0),
+              widget: Pages(pageNo: 0),
+            ),
+            (Route<dynamic> r) => false);
     }
 
     //function that takes care of long pressing the card
@@ -118,88 +123,113 @@ class _ListOfTodoState extends State<ListOfTodo>
       }
     }
 
-    return Scaffold(
-      floatingActionButton: new Floater(
-        isAnimated: true,
-        animatedIcon:
-            AnimatedIcon(icon: AnimatedIcons.menu_close, progress: controller),
-        onPressed: () => floatingOnPressed(),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar:
-          BottomBary(color: canShow ? Colors.red : Colors.yellow),
-      backgroundColor: Colors.white,
-      body: ListView.builder(
-        itemBuilder: (BuildContext context, int index) => GestureDetector(
-              onTap: () {
-                //function that takes care of what happens when we click the card and the first + element
+    return WillPopScope(
+      onWillPop: () => Navigator.of(context).pushAndRemoveUntil(
+          SlideRoute(
+              widget: Pages(pageNo: 0), initialSlideOffset: Offset(-1, 0)),
+          (Route<dynamic> route) => false),
+      child: Scaffold(
+        floatingActionButton: new Floater(
+          isAnimated: true,
+          animatedIcon: AnimatedIcon(
+              icon: AnimatedIcons.menu_close, progress: controller),
+          onPressed: () => floatingOnPressed(),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar:
+            BottomBary(color: canShow ? Colors.red : Colors.indigo),
+        backgroundColor: Colors.white,
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              title: Text(
+                "TODO",
+                textScaleFactor: 1.55,
+                style: TextStyle(fontWeight: FontWeight.bold, fontFamily: ""),
+              ),
+              backgroundColor: Colors.white,
+              elevation: 0,
+              titleSpacing: 30.0,
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      //function that takes care of what happens when we click the card and the first + element
 
-                if (!canShow) {
-                  if (index != 0) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => TodoMain(
-                                title: _title[index],
-                                color: looper(index),
-                              ),
-                        ));
-                  } else
-                    showBottomSheet(
-                        context: context, builder: buildBottomSheet);
-                }
-              },
-              onLongPress: () {
-                longPress(index);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Stack(
-                  fit: StackFit.passthrough,
-                  children: <Widget>[
-                    Cardy(
-                      bottomTitle: index == 0 ? false : true,
-                      titleSize: 40,
-                      height: 180,
+                      if (!canShow) {
+                        if (index != 0) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => TodoMain(
+                                      title: _title[index],
+                                      color: looper(index),
+                                    ),
+                              ));
+                        } else
+                          showBottomSheet(
+                              context: context, builder: buildBottomSheet);
+                      }
+                    },
+                    onLongPress: () {
+                      longPress(index);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Stack(
+                        fit: StackFit.passthrough,
+                        children: <Widget>[
+                          Cardy(
+                            bottomTitle: index == 0 ? false : true,
+                            titleSize: 40,
+                            height: 180,
 
-                      color: index == 0 ? Colors.deepOrange : looper(index),
-                      title: index == 0 ? "" : _title[index],
-                      //subtitle: "hello",
-                      body: index == 0
-                          ? Icon(
-                              Icons.add,
-                              size: 80,
-                              color: Colors.white,
-                            )
-                          : null,
+                            color:
+                                index == 0 ? Colors.deepOrange : looper(index),
+                            title: index == 0 ? "" : _title[index],
+                            //subtitle: "hello",
+                            body: index == 0
+                                ? Icon(
+                                    Icons.add,
+                                    size: 80,
+                                    color: Colors.white,
+                                  )
+                                : null,
+                          ),
+                          index != 0
+                              ? Positioned(
+                                  top: 10,
+                                  right: 10,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: canShow
+                                        ? Listener(
+                                            child: new Icon(
+                                              Icons.remove_circle,
+                                              color: Colors.white,
+                                              size: 30,
+                                            ),
+                                            onPointerDown: (e) {
+                                              setState(() {
+                                                remove(index);
+                                              });
+                                            })
+                                        : Container(),
+                                  ),
+                                )
+                              : Container(),
+                        ],
+                      ),
                     ),
-                    index != 0
-                        ? Positioned(
-                            top: 10,
-                            right: 10,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: canShow
-                                  ? Listener(
-                                      child: new Icon(
-                                        Icons.remove_circle,
-                                        color: Colors.white,
-                                        size: 30,
-                                      ),
-                                      onPointerDown: (e) {
-                                        setState(() {
-                                          remove(index);
-                                        });
-                                      })
-                                  : Container(),
-                            ),
-                          )
-                        : Container(),
-                  ],
-                ),
+                  );
+                },
+                childCount: _title.length,
               ),
             ),
-        itemCount: _title.length,
+          ],
+        ),
       ),
     );
   }
@@ -289,7 +319,7 @@ class _ListOfTodoState extends State<ListOfTodo>
   remove(int index) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     List m = preferences.getStringList('todo');
-    await deleteData(m[index]);
+    deleteData(m[index]);
     m.removeAt(index);
     preferences.setStringList('todo', m);
 

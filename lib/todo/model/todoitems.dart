@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 /*
 THIS CLASS DEALS WITH THE TODO_ITEM,IT DEFINES THE TODO_ITEM ITSELF
 */

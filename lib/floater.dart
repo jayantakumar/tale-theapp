@@ -18,11 +18,13 @@ class Floater extends StatelessWidget {
   final IconData icon;
   final Color color;
   final bool isAnimated;
+
   final AnimatedIcon animatedIcon;
   //THE UI ITSELF
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      heroTag: 1,
       onPressed: onPressed == null ? () {} : onPressed,
       child: isAnimated
           ? animatedIcon

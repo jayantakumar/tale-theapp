@@ -6,6 +6,7 @@ import 'package:tale/home/TopIcon.dart';
 import 'package:tale/home/bottombary.dart';
 import 'package:tale/home/cardy.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:nima/nima_actor.dart';
 import 'login/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tale/login/logout.dart';
@@ -13,18 +14,18 @@ import 'package:tale/login/signup.dart';
 import 'package:tale/login/Signupmaster.dart';
 import 'login/loginMaster.dart';
 import 'package:tale/todo/todo.dart';
+import 'package:tale/routeTransitionAnimation.dart';
 import 'todo/ui/todomain.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:tale/diary/ui/dairyUi.dart";
 import 'package:tale/diary/ui/addEventUi.dart';
 
 //LIST OF GLOBAL VARIABLES
-
+PageController controller;
 FirebaseAuth auth = FirebaseAuth.instance;
 bool hasLoggedIn = false;
 var myTheme = ThemeData(
     //buttonColor: Colors.white,
-    primaryColor: Colors.yellow,
     scaffoldBackgroundColor: Colors.white,
     fontFamily: "Courier",
     primaryTextTheme: TextTheme(
@@ -35,7 +36,8 @@ var myTheme = ThemeData(
     ));
 List<Widget> page = [
   Home(name: "Lyon"),
-  ListOfTodo(),
+  ListOfTodo(controller),
+  DiaryMainUI(controller),
 ];
 
 //THE MAIN FUNCTION OF THE PACK
@@ -51,9 +53,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  //TODO:DUMMY NAME TO BE REPLACED
-  String _name = "Lyon";
-
   @override
   void initState() {
     //check();
@@ -66,23 +65,22 @@ class _MyAppState extends State<MyApp> {
       theme: myTheme,
       color: Colors.yellow,
       debugShowCheckedModeBanner: false,
-      home: Home(name: _name),
+      home: Pages(pageNo: 0),
       routes: <String, WidgetBuilder>{
         '/login': (_) => new Login(),
-        'pages': (_) => new Pages(),
-        '/home': (_) => Home(name: _name),
+        '/diary': (_) => new Pages(pageNo: 2),
+        '/home': (_) => Pages(pageNo: 0),
         '/signup': (_) => new Signup(),
         '/signupMaster': (_) => new SignUpMaster(),
         '/loginMaster': (_) => new LoginMaster(),
-        '/todo': (_) => new ListOfTodo(),
-        '/diary': (_) => new DiaryMainUI(),
+        '/todo': (_) => new Pages(pageNo: 1),
       },
     );
   }
 }
 
 class Pages extends StatefulWidget {
-  int pageNo;
+  final int pageNo;
 
   Pages({Key key, this.pageNo = 0}) : super(key: key);
 
@@ -99,14 +97,13 @@ class PagesState extends State<Pages> {
     controller = PageController(initialPage: widget.pageNo);
   }
 
-  PageController controller;
-
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
       pageSnapping: true,
       scrollDirection: Axis.horizontal,
       controller: controller,
+      itemCount: page.length,
       itemBuilder: (BuildContext context, int index) {
         return page[index];
       },
@@ -148,129 +145,85 @@ class HomeState extends State<Home> {
           child: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
+                title: Text(
+                  "Home",
+                  textScaleFactor: 1.55,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontFamily: ""),
+                ),
                 backgroundColor: Colors.white,
                 elevation: 0,
-                titleSpacing: 5.0,
-                title: new HomeTitle(name: widget._name),
-                leading: SafeArea(
-                  child: TopIcon('assets/tales.svg'),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Icon(
-                      Icons.close,
-                      size: 30,
-                    ),
-                    onPressed: () async {
-                      logOut(_auth, context);
-                    },
-                  )
-                ],
+                titleSpacing: 30.0,
               ),
-              SliverStaggeredGrid.count(
-                crossAxisCount: 8,
-                staggeredTiles: tiles,
-                children: listReturner(context),
+              SliverList(
+                delegate: SliverChildListDelegate(listReturner(context)),
               ),
             ],
           )),
-      bottomNavigationBar: new BottomBary(),
+      bottomNavigationBar: new BottomBary(color: Colors.indigo),
     );
   }
 
   List<Widget> listReturner(BuildContext context) {
+    double _height = 120;
+    double _width = MediaQuery.of(context).size.width;
     return [
       Padding(
-        padding: const EdgeInsets.only(bottom: 30.0),
+        padding: const EdgeInsets.all(12.0),
         child: GestureDetector(
-          onTap: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => DiaryMainUI())),
+          onTap: () => Navigator.of(context).pushAndRemoveUntil(
+              SlideRoute(
+                  widget: Pages(pageNo: 2), initialSlideOffset: Offset(1, 0)),
+              (Route<dynamic> route) => false),
           child: Cardy(
             title: "Stories",
+            height: _height,
+            width: _width,
             color: Colors.pink,
-            subtitle: "Write your story",
           ),
         ),
       ),
-      GestureDetector(
-        onTap: () {
-          Navigator.of(context).pushNamed('/todo');
-        },
-        child: Cardy(
-            justified: true,
+      Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: GestureDetector(
+          onTap: () => Navigator.of(context).pushAndRemoveUntil(
+              SlideRoute(
+                  widget: Pages(pageNo: 1), initialSlideOffset: Offset(1, 0)),
+              (Route<dynamic> route) => false),
+          child: Cardy(
+            height: _height,
+            width: _width,
             title: "Todo",
-            color: Colors.purpleAccent,
-            body: Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 80,
-            )),
-      ),
-      Cardy(
-        title: "",
-        color: Colors.lightBlue,
-        body: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 80,
-        ),
-      ),
-      Cardy(
-        title: "",
-        color: Colors.deepOrangeAccent,
-        body: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 80,
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: 30.0),
-        child: Cardy(
-          title: "",
-          color: Colors.teal,
-          body: Text(
-            "Today".toUpperCase(),
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 30),
+            color: Colors.green,
           ),
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(top: 30.0),
+        padding: const EdgeInsets.all(12.0),
+        child: Cardy(
+          title: "Today",
+          color: Colors.indigo,
+          height: _height,
+          width: _width,
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(12.0),
         child: Cardy(
           title: "Goals",
-          color: Colors.purpleAccent,
-          body: Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 80,
-          ),
+          color: Colors.redAccent,
+          height: _height,
+          width: _width,
         ),
       ),
-      Cardy(
-        title: "",
-        color: Colors.pinkAccent,
-        body: Text(
-          "habits".toUpperCase(),
-          style: TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 30),
+      Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Cardy(
+          title: "HABITS",
+          color: Colors.pinkAccent,
+          height: _height,
+          width: _width,
         ),
-      ),
-      Container(
-        color: Colors.transparent,
       ),
     ];
   }
-
-  List<StaggeredTile> tiles = [
-    const StaggeredTile.count(8, 5),
-    const StaggeredTile.count(4, 6),
-    const StaggeredTile.count(4, 3),
-    const StaggeredTile.count(4, 3),
-    const StaggeredTile.count(4, 3),
-    const StaggeredTile.count(4, 6),
-    const StaggeredTile.count(4, 3),
-    const StaggeredTile.count(8, 1),
-  ];
 }

@@ -6,6 +6,7 @@ import 'package:tale/diary/model/dairy_items.dart';
 import 'package:tale/floater.dart';
 import 'package:intl/intl.dart';
 import 'package:tale/diary/util/database_diary.dart';
+import 'package:tale/main.dart';
 import 'addEventUi.dart';
 import 'dairyUi.dart';
 /*
@@ -17,8 +18,9 @@ import 'dairyUi.dart';
 class AddActivity extends StatefulWidget {
   @override
   _AddActivityState createState() => _AddActivityState();
-  AddActivity(this.mood);
+  AddActivity(this.mood, this.controller);
   final String mood;
+  final PageController controller;
 }
 
 class _AddActivityState extends State<AddActivity> {
@@ -225,6 +227,7 @@ class _AddActivityState extends State<AddActivity> {
   }
 
   onSubmit(String text) async {
+    topBar.date.day.toString();
     if (text != "" && text != null && selectedActivityObject != null) {
       DiaryItem diaryItem = DiaryItem(
           text,
@@ -240,7 +243,7 @@ class _AddActivityState extends State<AddActivity> {
       var addedItem = await db.getItem(_saveId);
       print(addedItem.emotion);
       Navigator.of(context)
-          .pushReplacement(SlideRightRoute(widget: DiaryMainUI()));
+          .pushNamedAndRemoveUntil('/diary', (Route<dynamic> route) => false);
     } else
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Write something or Select an activity"),

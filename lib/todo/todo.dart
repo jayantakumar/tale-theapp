@@ -4,7 +4,6 @@ import 'package:tale/home/bottombary.dart';
 import 'package:tale/todo/model/todoitems.dart';
 import 'package:tale/todo/util/databaseClient.dart';
 import 'package:tale/boldtextstyle.dart';
-import 'package:tale/textboxstyle.dart';
 
 //the ui inside every major todo_title , contains code to update,delete,add todo_items from ui
 
