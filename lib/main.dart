@@ -14,7 +14,7 @@ import 'package:tale/login/signup.dart';
 import 'package:tale/login/Signupmaster.dart';
 import 'login/loginMaster.dart';
 import 'package:tale/todo/todo.dart';
-import 'package:tale/routeTransitionAnimation.dart';
+import 'package:tale/style/routeTransitionAnimation.dart';
 import 'todo/ui/todomain.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:tale/diary/ui/dairyUi.dart";
@@ -44,7 +44,6 @@ List<Widget> page = [
 
 void main() {
   hasLoggedIn = auth.currentUser() == null;
-  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   runApp(MyApp());
 }
 

@@ -7,7 +7,7 @@ import 'package:tale/floater.dart';
 import 'package:tale/home/bottombary.dart';
 import 'package:tale/home/cardy.dart';
 import 'package:tale/boldtextstyle.dart';
-import 'package:tale/routeTransitionAnimation.dart';
+import 'package:tale/style/routeTransitionAnimation.dart';
 import 'package:tale/todo/todo.dart';
 import 'dart:io';
 import 'package:tale/main.dart';

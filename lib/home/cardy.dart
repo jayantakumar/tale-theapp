@@ -30,14 +30,14 @@ class Cardy extends StatelessWidget {
       child: Card(
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: Colors.black,
+            color: color.withOpacity(0.3),
             width: 3,
           ),
           borderRadius: BorderRadius.circular(10.0),
         ),
         color: color,
         margin: EdgeInsets.all(10.0),
-        elevation: 10.0,
+        elevation: 8.0,
         child: new BodyOfCardy(
           title: title.toUpperCase(),
           subtitle: subtitle,

@@ -56,6 +56,7 @@ class _AddActivityState extends State<AddActivity> {
         color = emotionColorMap.containsKey(widget.mood)
             ? emotionColorMap[widget.mood]
             : color;
+        topBar = new TopBar();
         items = server.getGridList(server.activityList);
       });
     });
@@ -131,7 +132,7 @@ class _AddActivityState extends State<AddActivity> {
         builder: (BuildContext context) => SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  new TopBar(),
+                  topBar,
                   new AddNoteBloc(textEditingController: textEditingController),
                   SizedBox(height: 20),
                   Container(
@@ -278,7 +279,7 @@ class AddNoteBloc extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: TextField(
               decoration: inputDec("Add Note", null),
-              maxLength: 150,
+              maxLength: 200,
               controller: textEditingController,
             ),
           ),

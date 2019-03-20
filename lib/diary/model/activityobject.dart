@@ -27,9 +27,15 @@ class Server {
     ActivityObject("Movies", "🎬", "Entertainment"),
     ActivityObject("Games", "🕹", "Entertainment"),
     ActivityObject("Music", "🎧", "Entertainment"),
+    ActivityObject("Reading", "📚", "Entertainment"),
     //other
     ActivityObject("Spacy", "🛰️", "Other"),
     ActivityObject("Flying", "🚁", "Other"),
+    ActivityObject("Joker", "🤡", "Other"),
+    ActivityObject("Fright", "💀", "Other"),
+    ActivityObject("Alien", "👽", "Other"),
+    ActivityObject("Ghost", "👻", "Other"),
+    ActivityObject("Poop", "💩", "Other"),
     //food
     ActivityObject("Healthy Food", "🍎", "Food"),
     ActivityObject("Junk Food", "🍟", "Food"),
@@ -88,9 +94,19 @@ class Server {
     ActivityObject("Shopping", "🛒", "Events"),
     //feeling
     ActivityObject("Hot", "🔥", "Feeling"),
+    ActivityObject("Rocking", "🤘", "Feeling"),
     ActivityObject("Lovely", "💖", "Feeling"),
     ActivityObject("Broken", "💔", "Feeling"),
     ActivityObject("Lovely", "💖", "Feeling"),
+    ActivityObject("Moneyyy", "🤑", "Feeling"),
+    ActivityObject("Relived", "😌", "Feeling"),
+    ActivityObject("Mind Blown", "🤯", "Feeling"),
+    ActivityObject("Cursing", "🤬", "Feeling"),
+    ActivityObject("Sick", "🤒", "Feeling"),
+    ActivityObject("Disgusting", "🤮", "Feeling"),
+    ActivityObject("Nerd", "🤓", "Feeling"),
+    ActivityObject("Drooling", "🤤", "Feeling"),
+
     //people
     ActivityObject("Love", "💑", "People"),
     ActivityObject("Family", "👪", "People"),

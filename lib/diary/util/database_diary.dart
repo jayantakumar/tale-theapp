@@ -41,7 +41,7 @@ class DataBaseHelper {
 
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentDirectory.path, "dairy12345_db.db");
+    String path = join(documentDirectory.path, "dairy12345mem_db.db");
     var ourDb = await openDatabase(path, onCreate: _onCreate, version: 1);
     return ourDb;
   }

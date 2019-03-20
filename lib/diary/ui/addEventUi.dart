@@ -3,7 +3,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:tale/diary/ui/addActivity.dart';
 import 'package:tale/home/bottombary.dart';
 import 'package:tale/floater.dart';
-import 'package:tale/routeTransitionAnimation.dart';
+import 'package:tale/style/routeTransitionAnimation.dart';
 import 'dairyUi.dart';
 
 const Color color = Color(0xFF00D67E);
@@ -150,7 +150,7 @@ class _AddUIState extends State<AddUI> {
 }
 
 List<String> path;
-
+//emotions
 const List<String> emotions = [
   "Happy",
   "Angry",
